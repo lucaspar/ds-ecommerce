@@ -10,6 +10,9 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
+import js.co.uk.tuplespace.space.Space;
+import js.co.uk.tuplespace.space.TupleSpace;
+import js.co.uk.tuplespace.space.TupleSpaceManager;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -20,19 +23,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
 @WebService()
 public class EcommerceService {
 
     private static AmazonSQS sqs;
     private static String pending;
+    private static Space inventory_ts;
+    private static Space processed_ts;
 
     @WebMethod
     public String sayHelloWorldFrom(String from) {
 
+        TupleSpace ts = new TupleSpace();
+
+        ts.listAllTuples();
+
         String result = "Hello, world, from " + from;
         System.out.println(result);
         return result;
+
 
     }
 
@@ -56,9 +65,9 @@ public class EcommerceService {
         String orderID = UUID.randomUUID().toString();
 
         /*
-        TupleSpace inventory;
+        TupleSpace inventory_ts;
         TupleSpace processed;
-        if ( inventory.take(<productID, quantity>) )    // Product available, take from inventory and send to processed
+        if ( inventory_ts.take(<productID, quantity>) )    // Product available, take from inventory_ts and send to processed
             processed.put(<orderID, productID, quantity>);
 
         }
@@ -109,9 +118,24 @@ public class EcommerceService {
 
     public static void main(String[] argv) {
 
-        connect2Amazon();
+        createTupleSpaces();
 
-        startWebService();
+        //connect2Amazon();
+
+        //startWebService();
+
+    }
+
+    private static void createTupleSpaces() {
+
+        TupleSpaceManager tm = new TupleSpaceManager();
+        inventory_ts = tm.getSpace("Inventory");
+        processed_ts = tm.getSpace("Processed");
+
+        System.out.println(inventory_ts.getName());
+
+        System.out.println(inventory_ts.listAllTuples());
+        System.out.println(processed_ts.listAllTuples());
 
     }
 

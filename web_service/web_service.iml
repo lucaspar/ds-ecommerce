@@ -34,5 +34,7 @@
         <jarDirectory url="file://$USER_HOME$/installed/aws-sdk/third-party/lib" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="tuplespaces" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
