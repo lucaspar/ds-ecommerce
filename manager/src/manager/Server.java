@@ -13,7 +13,7 @@ class Server {
 
     public static void main(String[] args) {
 
-        System.setSecurityManager(new SecurityManager());
+        //System.setSecurityManager(new SecurityManager());
 
         try {
             System.out.println("Creating...");

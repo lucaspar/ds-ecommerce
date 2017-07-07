@@ -2,7 +2,7 @@ package manager;
 
 import java.rmi.Naming;
 
-class Client {
+class Supplier {
 
     public static void main (String[] args) {
         ManagerInterface remoteTask;
