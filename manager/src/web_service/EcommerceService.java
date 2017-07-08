@@ -2,11 +2,7 @@ package web_service;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
@@ -15,11 +11,16 @@ import manager.ManagerInterface;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static remote.AmazonSQS.clientException;
+import static remote.AmazonSQS.connect2Amazon;
+import static remote.AmazonSQS.serviceException;
+import static remote.ConnectManager.connect2Manager;
+
 
 @WebService()
 public class EcommerceService {
@@ -27,7 +28,6 @@ public class EcommerceService {
     private static AmazonSQS sqs;
     private static String pending;
     private static ManagerInterface warehouse;
-    private static final String managerAddress = "rmi://localhost/Manager";
 
     @WebMethod
     public String checkOrder(String orderID) throws RemoteException {
@@ -51,6 +51,7 @@ public class EcommerceService {
             orderAttributes.put("productID", new MessageAttributeValue().withDataType("String").withStringValue(productID));
             orderAttributes.put("quantity", new MessageAttributeValue().withDataType("Number").withStringValue(Integer.toString(quantity)));
 
+            // send message
             try {
                 SendMessageResult result = sqs
                         .sendMessage(new SendMessageRequest(pending, "Order description")
@@ -74,73 +75,17 @@ public class EcommerceService {
 
     }
 
-    private static void clientException(AmazonClientException ace) {
-        System.out.println("Caught an AmazonClientException: failed communicating with SQS");
-        System.out.println("Error Message: " + ace.getMessage());
-    }
-
-    private static void serviceException(AmazonServiceException ase) {
-        System.out.println("Caught an AmazonServiceException:");
-        System.out.println("Error Message:    " + ase.getMessage());
-        System.out.println("HTTP Status Code: " + ase.getStatusCode());
-        System.out.println("AWS Error Code:   " + ase.getErrorCode());
-        System.out.println("Error Type:       " + ase.getErrorType());
-        System.out.println("Request ID:       " + ase.getRequestId());
-    }
-
     public static void main(String[] argv) {
 
         System.out.println("\t\t===============");
         System.out.println("\t\t  Web Service  ");
         System.out.println("\t\t===============\n");
 
-        connect2Manager();
-
-        connect2Amazon();
+        warehouse   = connect2Manager();
+        sqs         = connect2Amazon();
+        pending     = sqs.listQueues().getQueueUrls().get(0);
 
         startWebService();
-
-    }
-
-    private static void connect2Manager() {
-
-        try {
-            warehouse = (ManagerInterface) Naming.lookup(managerAddress);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private static void connect2Amazon() {
-
-        AWSCredentials awsCredentials;
-        DefaultAWSCredentialsProviderChain credentialsProvider = new DefaultAWSCredentialsProviderChain();
-
-        try {
-            awsCredentials = credentialsProvider.getCredentials();
-        } catch (Exception e) {
-            throw new AmazonClientException(
-                    "Cannot load the credentials from the credential profiles file. " +
-                            "Please make sure that your credentials file is at the correct " +
-                            "location (~/.aws/credentials), and is in valid format.",
-                    e);
-        }
-
-        sqs = AmazonSQSClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).build();
-
-        try {
-            // Get pending orders queue URL
-            pending = sqs.listQueues().getQueueUrls().get(0);
-
-            System.out.println("\t:: Connected to Amazon SQS ::\n");
-
-        } catch (AmazonServiceException ase) {
-            serviceException(ase);
-
-        } catch (AmazonClientException ace) {
-            clientException(ace);
-        }
 
     }
 
@@ -154,4 +99,5 @@ public class EcommerceService {
         System.out.println("\t" + address);
 
     }
+
 }

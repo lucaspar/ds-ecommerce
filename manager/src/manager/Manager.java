@@ -15,15 +15,15 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
 
     public Manager() throws RemoteException {}
 
+    // Add new items to inventory. Called by supplier.
     @Override
     public void addSupplies(String prodId, int quantity) throws RemoteException {
 
         // TODO: add access control with ticket
 
         SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple(prodId, "*"));
-        Object[] match = result.getData().toArray();
 
-        if (match.length == 0) {
+        if(result == null) {
             inventory_ts.put(new SimpleTuple(prodId, quantity));
         }
         else {
@@ -35,13 +35,20 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
         System.out.println(inventory_ts.listAllTuples());
     }
 
+
+    // If there are available items in inventory, place the order
+    // in processed tuple space. Returns true if successful.
     @Override
     public boolean placeOrder(String orderId, String prodId, int quantity) throws RemoteException {
 
         // TODO: add access control with ticket
 
-        SimpleTuple entry = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple(prodId, "*"));
-        Object[] match = entry.getData().toArray();
+        SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple(prodId, "*"));
+        if(result == null) {
+            return false;
+        }
+
+        Object[] match = result.getData().toArray();
         int qTotal = (int) match[1];
 
         if (qTotal >= quantity) {                   // items available, place order
@@ -56,27 +63,30 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
 
     }
 
+
+    // Returns true if order is in processed tuple space.
     @Override
     public boolean checkProcessed(String orderId) throws RemoteException {
 
         SimpleTuple result = (SimpleTuple) processed_ts.readIfExists(new SimpleTuple(orderId, "*", "*"));
-        System.out.println(result.getData());
 
-        return !result.getData().isEmpty();
+        return !(result == null);
 
     }
 
-    public static void createTS() {
+    // Initializes tuple spaces with this server
+    public static void initTupleSpaces() {
 
         if (tm == null)             { tm = new TupleSpaceManager(); }
         if (inventory_ts == null)   { inventory_ts = tm.getSpace("Inventory"); }
         if (processed_ts == null)   { processed_ts = tm.getSpace("Processed"); }
 
         inventory_ts.put(new SimpleTuple("prod1", 4));
-        SimpleTuple result = (SimpleTuple) inventory_ts.read(new SimpleTuple("prod1", "*"));
+        SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple("prod2", "*"));
 
-        //System.out.println(result);
-        System.out.println(result.getData().toArray()[1]);
+        if(result != null) {
+            System.out.println(result.getData().toArray()[1]);
+        }
 
     }
 

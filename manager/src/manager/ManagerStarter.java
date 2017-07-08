@@ -8,7 +8,7 @@ class ManagerStarter {
     public static void main(String[] args) {
 
         System.out.println("\t\t======================");
-        System.out.println("\t\t| TUPLESPACE MANAGER |");
+        System.out.println("\t\t  TupleSpace Manager  ");
         System.out.println("\t\t======================\n");
 
         //System.setSecurityManager(new SecurityManager());
@@ -27,7 +27,7 @@ class ManagerStarter {
         }
 
         // create tuple spaces
-        Manager.createTS();
+        Manager.initTupleSpaces();
 
     }
 
