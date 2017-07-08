@@ -10,13 +10,13 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageResult;
-import js.co.uk.tuplespace.space.TupleSpace;
+import manager.ManagerInterface;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -26,49 +26,24 @@ public class EcommerceService {
 
     private static AmazonSQS sqs;
     private static String pending;
+    private static ManagerInterface warehouse;
+    private static final String managerAddress = "rmi://localhost/Manager";
 
     @WebMethod
-    public String sayHelloWorldFrom(String from) {
-
-        TupleSpace ts = new TupleSpace();
-
-        ts.listAllTuples();
-
-        String result = "Hello, world, from " + from;
-        System.out.println(result);
-        return result;
-
-
+    public String checkOrder(String orderID) throws RemoteException {
+        return (warehouse.checkProcessed(orderID)) ?
+                "Pedido processado." : "Pedido pendente.";
     }
 
     @WebMethod
-    public String serverTime() {
-
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(cal.getTime());
-
-    }
-
-    @WebMethod
-    public String checkOrder(String orderID) {
-        return "TODO. Order ID: " + orderID;
-    }
-
-    @WebMethod
-    public String placeOrder(String productID, int quantity) {
+    public String placeOrder(String productID, int quantity) throws RemoteException {
 
         String orderID = UUID.randomUUID().toString();
 
-        /*
-        TupleSpace inventory_ts;
-        TupleSpace processed;
-        if ( inventory_ts.take(<productID, quantity>) )     // Product available, take from inventory_ts and send to processed
-            processed.put(<orderID, productID, quantity>);
-
+        if (warehouse.placeOrder(orderID, productID, quantity)) {       // processed
+            return orderID;
         }
-        else {  */                                          // Product unavailable, send to pending queue
-            System.out.println("Posting order to pending queue...");
+        else {                                                          // pending
 
             // build message
             Map<String, MessageAttributeValue> orderAttributes = new HashMap<>();
@@ -81,7 +56,8 @@ public class EcommerceService {
                         .sendMessage(new SendMessageRequest(pending, "Order description")
                                 .withMessageAttributes(orderAttributes));
 
-                System.out.println(result.toString());
+                System.out.println("\tOrder " + orderID + " posted to pending queue");
+                System.out.println("\tSQS: " + result.toString());
 
                 return orderID;
 
@@ -92,7 +68,7 @@ public class EcommerceService {
                 clientException(ace);
             }
 
-        //}
+        }
 
         return "";
 
@@ -118,9 +94,21 @@ public class EcommerceService {
         System.out.println("\t\t  Web Service  ");
         System.out.println("\t\t===============\n");
 
+        connect2Manager();
+
         connect2Amazon();
 
         startWebService();
+
+    }
+
+    private static void connect2Manager() {
+
+        try {
+            warehouse = (ManagerInterface) Naming.lookup(managerAddress);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
