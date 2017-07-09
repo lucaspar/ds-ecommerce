@@ -10,8 +10,13 @@ import manager.ManagerInterface;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 import javax.xml.ws.Endpoint;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,18 +34,55 @@ public class EcommerceService {
     private static String pending;
     private static ManagerInterface warehouse;
 
+    @WebListener
+    public static class InitializeListener implements ServletContextListener {
+
+        @Override
+        public final void contextInitialized(final ServletContextEvent sce) {
+            // initialization code
+        }
+
+        @Override
+        public final void contextDestroyed(final ServletContextEvent sce) {}
+    }
+
     @WebMethod
     public String checkOrder(String orderID) throws RemoteException {
+
+        if (warehouse == null) {
+            System.out.println("The Web Service was not started correctly.");
+            return "Não foi possível verificar o pedido";
+        }
+
         return (warehouse.checkProcessed(orderID)) ?
-                "Pedido processado." : "Pedido pendente.";
+                "Pedido processado." : "Pedido ainda não processado.";
+    }
+
+    @WebMethod
+    public void init(String managerIP) {
+
+        System.out.println("\t\t===============");
+        System.out.println("\t\t  Web Service  ");
+        System.out.println("\t\t===============\n");
+
+        sqs         = connect2Amazon();
+        warehouse   = connect2Manager(managerIP);
+        pending     = sqs.listQueues().getQueueUrls().get(0);
+
     }
 
     @WebMethod
     public String placeOrder(String productID, int quantity) throws RemoteException {
 
-        String orderID = UUID.randomUUID().toString();
+        if (sqs == null || warehouse == null || pending == null) {
+            System.out.println("The Web Service was not started correctly.");
+            return "Não foi possível efetuar o pedido";
+        }
+
+        String orderID = new BigInteger(130, new SecureRandom()).toString(32);
 
         if (warehouse.placeOrder(orderID, productID, quantity)) {       // processed
+            System.out.println("\tOrder " + orderID + " processed.");
             return orderID;
         }
         else {                                                          // pending
@@ -53,12 +95,10 @@ public class EcommerceService {
 
             // send message
             try {
-                SendMessageResult result = sqs
-                        .sendMessage(new SendMessageRequest(pending, "Order description")
+                sqs.sendMessage(new SendMessageRequest(pending, "Order description")
                                 .withMessageAttributes(orderAttributes));
 
                 System.out.println("\tOrder " + orderID + " posted to pending queue");
-                System.out.println("\tSQS: " + result.toString());
 
                 return orderID;
 
@@ -75,21 +115,7 @@ public class EcommerceService {
 
     }
 
-    public static void main(String[] argv) {
-
-        System.out.println("\t\t===============");
-        System.out.println("\t\t  Web Service  ");
-        System.out.println("\t\t===============\n");
-
-        sqs         = connect2Amazon();
-        warehouse   = connect2Manager();
-        pending     = sqs.listQueues().getQueueUrls().get(0);
-
-        startWebService();
-
-    }
-
-    private static void startWebService() {
+    public static void main(String[] args) {                // not used in Tomcat
 
         Object implementor = new EcommerceService();
         //String address = "http://192.168.248.151:9000/EcommerceService";

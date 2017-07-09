@@ -8,13 +8,13 @@
     </listener>
     <servlet>
         <description>JAX-WS endpoint</description>
-        <display-name>WSServlet</display-name>
-        <servlet-name>WSServlet</servlet-name>
+        <display-name>E-commmerce WebService</display-name>
+        <servlet-name>E-commmerce</servlet-name>
         <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>WSServlet</servlet-name>
-        <url-pattern>/services/*</url-pattern>
+        <servlet-name>E-commmerce</servlet-name>
+        <url-pattern>/ws</url-pattern>
     </servlet-mapping>
 </web-app>

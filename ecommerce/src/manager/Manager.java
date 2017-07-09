@@ -32,7 +32,8 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
             inventory_ts.put(new SimpleTuple(prodId, qTotal + quantity));
         }
 
-        System.out.println(inventory_ts.listAllTuples());
+        System.out.println(Integer.toString(quantity) + " x " + prodId + " added to inventory.");
+
     }
 
 
@@ -55,9 +56,14 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
 
             inventory_ts.put(new SimpleTuple(prodId, qTotal-quantity));
             processed_ts.put(new SimpleTuple(orderId, prodId, quantity));
+
+            System.out.println("Order " + orderId + " was placed and processed.");
+
             return true;
 
         }
+
+        System.out.println("Order " + orderId + " could not be processed.");
 
         return false;
 
@@ -69,6 +75,9 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
     public boolean checkProcessed(String orderId) throws RemoteException {
 
         SimpleTuple result = (SimpleTuple) processed_ts.readIfExists(new SimpleTuple(orderId, "*", "*"));
+
+        String connective = !(result == null) ? "" : "not ";
+        System.out.println("Order " + orderId + " is " + connective + "in processed tuple space.");
 
         return !(result == null);
 
@@ -82,11 +91,15 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
         if (processed_ts == null)   { processed_ts = tm.getSpace("Processed"); }
 
         inventory_ts.put(new SimpleTuple("prod1", 4));
+        processed_ts.put(new SimpleTuple("ord22", "prod1", 2));
+
+        /*
         SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple("prod1", "*"));
 
         if(result != null) {
             System.out.println(result.getData().toArray()[1]);
         }
+        */
 
     }
 

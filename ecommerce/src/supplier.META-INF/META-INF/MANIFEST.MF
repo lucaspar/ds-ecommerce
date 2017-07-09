@@ -1,28 +1,28 @@
 Manifest-Version: 1.0
-Class-Path: tupleSpaces.jar spaces.jar touchGraph.jar aopalliance.jar 
- hessian-4.0.7.jar commons-logging.jar servlet-api-3.0.jar jetty-io-8.
- 0.4.v20111024.jar jetty-ajp-8.0.4.v20111024.jar jetty-jmx-8.0.4.v2011
- 1024.jar jetty-xml-8.0.4.v20111024.jar jetty-http-8.0.4.v20111024.jar
-  jetty-jndi-8.0.4.v20111024.jar jetty-plus-8.0.4.v20111024.jar jetty-
- util-8.0.4.v20111024.jar jetty-client-8.0.4.v20111024.jar jetty-deplo
- y-8.0.4.v20111024.jar jetty-policy-8.0.4.v20111024.jar jetty-server-8
- .0.4.v20111024.jar jetty-webapp-8.0.4.v20111024.jar jetty-rewrite-8.0
- .4.v20111024.jar jetty-servlet-8.0.4.v20111024.jar jetty-security-8.0
- .4.v20111024.jar jetty-servlets-8.0.4.v20111024.jar jetty-webapp-8.0.
- 4.v20111024 2.jar jetty-websocket-8.0.4.v20111024.jar jetty-annotatio
- ns-8.0.4.v20111024.jar jetty-continuation-8.0.4.v20111024.jar jetty-o
- verlay-deployer-8.0.4.v20111024.jar javax.annotation.jar FastInoset.j
- ar ha-api.jar gmbal-api-only.jar jaxb-xjc.jar jaxb-api.jar jaxb-impl.
- jar jaxws-api.jar jaxws-rt.jar jaxws-tools.jar jsr181-api.jar mail.ja
- r management-api.jar mimepull.jar policy.jar saaj-api.jar saaj-impl.j
- ar stax2-api.jar stax-ex.jar streambuffer.jar woodstox-core-asl.jar a
- ws-java-sdk-1.11.158.jar aspectjweaver.jar httpcore-4.4.4.jar ion-jav
- a-1.0.2.jar aspectjrt-1.8.2.jar joda-time-2.8.1.jar freemarker-2.3.9.
- jar httpclient-4.5.2.jar commons-codec-1.9.jar jackson-core-2.6.6.jar
-  javax.mail-api-1.4.6.jar commons-logging-1.1.3.jar jackson-databind-
- 2.6.6.jar jmespath-java-1.11.158.jar aws-swf-build-tools-1.1.jar jack
- son-annotations-2.6.0.jar spring-core-3.0.7.RELEASE.jar spring-test-3
- .0.7.RELEASE.jar spring-beans-3.0.7.RELEASE.jar spring-context-3.0.7.
- RELEASE.jar jackson-dataformat-cbor-2.6.6.jar
+Class-Path: aspectjweaver.jar httpcore-4.4.4.jar ion-java-1.0.2.jar as
+ pectjrt-1.8.2.jar joda-time-2.8.1.jar freemarker-2.3.9.jar httpclient
+ -4.5.2.jar commons-codec-1.9.jar jackson-core-2.6.6.jar javax.mail-ap
+ i-1.4.6.jar commons-logging-1.1.3.jar jackson-databind-2.6.6.jar jmes
+ path-java-1.11.158.jar aws-swf-build-tools-1.1.jar jackson-annotation
+ s-2.6.0.jar spring-core-3.0.7.RELEASE.jar spring-test-3.0.7.RELEASE.j
+ ar spring-beans-3.0.7.RELEASE.jar spring-context-3.0.7.RELEASE.jar ja
+ ckson-dataformat-cbor-2.6.6.jar aws-java-sdk-1.11.158.jar tupleSpaces
+ .jar mail.jar ha-api.jar policy.jar stax-ex.jar jaxb-api.jar jaxb-xjc
+ .jar jaxws-rt.jar mimepull.jar saaj-api.jar jaxb-impl.jar jaxws-api.j
+ ar saaj-impl.jar stax2-api.jar FastInoset.jar jsr181-api.jar jaxws-to
+ ols.jar streambuffer.jar gmbal-api-only.jar management-api.jar javax.
+ annotation.jar woodstox-core-asl.jar spaces.jar touchGraph.jar aopall
+ iance.jar hessian-4.0.7.jar commons-logging.jar servlet-api-3.0.jar j
+ etty-io-8.0.4.v20111024.jar jetty-ajp-8.0.4.v20111024.jar jetty-jmx-8
+ .0.4.v20111024.jar jetty-xml-8.0.4.v20111024.jar jetty-http-8.0.4.v20
+ 111024.jar jetty-jndi-8.0.4.v20111024.jar jetty-plus-8.0.4.v20111024.
+ jar jetty-util-8.0.4.v20111024.jar jetty-client-8.0.4.v20111024.jar j
+ etty-deploy-8.0.4.v20111024.jar jetty-policy-8.0.4.v20111024.jar jett
+ y-server-8.0.4.v20111024.jar jetty-webapp-8.0.4.v20111024.jar jetty-r
+ ewrite-8.0.4.v20111024.jar jetty-servlet-8.0.4.v20111024.jar jetty-se
+ curity-8.0.4.v20111024.jar jetty-servlets-8.0.4.v20111024.jar jetty-w
+ ebapp-8.0.4.v20111024 2.jar jetty-websocket-8.0.4.v20111024.jar jetty
+ -annotations-8.0.4.v20111024.jar jetty-continuation-8.0.4.v20111024.j
+ ar jetty-overlay-deployer-8.0.4.v20111024.jar
 Main-Class: manager.Supplier
 
