@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://web_service/" xmlns:tns="http://web_service/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="checkOrder" type="tns:checkOrder"/>
+
+  <xs:element name="checkOrderResponse" type="tns:checkOrderResponse"/>
+
+  <xs:element name="placeOrder" type="tns:placeOrder"/>
+
+  <xs:element name="placeOrderResponse" type="tns:placeOrderResponse"/>
+
+  <xs:complexType name="placeOrder">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+      <xs:element name="arg1" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="placeOrderResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="checkOrder">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="checkOrderResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
