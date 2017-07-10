@@ -93,14 +93,6 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
         inventory_ts.put(new SimpleTuple("prod1", 4));
         processed_ts.put(new SimpleTuple("ord22", "prod1", 2));
 
-        /*
-        SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple("prod1", "*"));
-
-        if(result != null) {
-            System.out.println(result.getData().toArray()[1]);
-        }
-        */
-
     }
 
 }

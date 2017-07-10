@@ -10,16 +10,19 @@ public class ConnectManager {
 
     public static ManagerInterface connect2Manager(String managerIP) {
 
+        int port = 1099;
+
+        String lookupAddr;
         if (managerIP == null) {
-            managerIP = managerAddress;
+            lookupAddr = "rmi://localhost:" + port + "/Manager";
         } else {
-            managerIP = "rmi://" + managerIP + "/Manager";
+            lookupAddr = "rmi://" + managerIP + ":" + port + "/Manager";
         }
 
         try {
 
-            ManagerInterface mInt = (ManagerInterface) Naming.lookup(managerIP);
-            System.out.println("\t:: Connected to Manager ::\n");
+            ManagerInterface mInt = (ManagerInterface) Naming.lookup(lookupAddr);
+            System.out.println("\t:: Connected to Manager ::\n\n\t"+lookupAddr);
             return mInt;
 
         } catch (Exception e) {

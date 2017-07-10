@@ -16,15 +16,30 @@ class ManagerStarter {
         System.out.println("\t\t======================\n");
 
         //System.setSecurityManager(new SecurityManager());
-        String rmiAddr;
+        int port = 1099;
+
+        try { // special exception handler for registry creation
+            LocateRegistry.createRegistry(port);
+        } catch (RemoteException e) {
+            // do nothing, error means registry already exists
+            System.out.println("\tjava RMI registry already exists.");
+        }
+
+        String rmiAddr, hostname;
+        //hostname = "0.0.0.0";
+        //rmiAddr = "rmi://" + hostname + ":" + port + "/Manager";
 
         try {                                                           // try rebind with local IP
 
-            String localIP = getLocalIP();
-            rmiAddr = "rmi://" + localIP + "/Manager";
+            if (args.length > 0) {
+                hostname = args[0];
+            }
+            else {
+                hostname = getLocalIP();
+            }
+            rmiAddr = "rmi://" + hostname + ":" + port + "/Manager";
 
             // setting RMI object
-            LocateRegistry.createRegistry(1099);
             Naming.rebind(rmiAddr, new Manager());
             System.out.println("\tCreated RMI server object\n\t" + rmiAddr);
 
@@ -42,6 +57,8 @@ class ManagerStarter {
             }
 
         }
+
+        System.out.println("");
 
         // create tuple spaces
         Manager.initTupleSpaces();

@@ -1,0 +1,118 @@
+html {
+    font-family: 'Raleway', sans-serif;
+    line-height: 140%;
+}
+
+a, a:hover, a:active {
+    text-decoration: none;
+    color: #07d;
+}
+a:focus {
+    text-decoration: none;
+    color: #07d;
+}
+a:focus > .card {
+    border: 2px solid #e70;
+}
+
+.hidden {
+    display: none;
+}
+
+.card {
+    box-shadow: 2px 2px 2px #aaa;
+    padding: 2em;
+    margin: 1em;
+    width: 100%;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 5px 5px 10px #ccc;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.card-title {
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 1em;
+    font-size: 20px;
+    font-weight: lighter;
+}
+
+.header {
+    width: 100%;
+    padding: 2em;
+    background-color: #e70;         /* ORANGE */
+    color: #fff;
+    box-shadow: 0 5px 10px #ccc;
+}
+
+.response {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translate(-50%, -50%);
+    width: 40%;
+    min-width: 300px;
+    max-width: 600px;
+    background-color: rgba(0, 130, 255, 0.85);
+    padding: 1em;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+}
+
+.wrapper {
+    min-height: 90vh;
+}
+
+input, button {
+    width: 100%;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    margin: 1em auto;
+    display: block;
+    font-size: 90%;
+    font-weight: lighter;
+    text-transform: uppercase;
+}
+
+button.btn {
+    background-color: #e70;
+    width: 50%;
+    min-width: 150px;
+    max-width: 400px;
+    margin: auto;
+    display: block;
+    text-transform: uppercase;
+    border: 0;
+    box-shadow: 2px 2px 2px #aaa;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+button.btn:hover {
+    background-color: #e70;
+    border: 0;
+    box-shadow: 5px 5px 5px #888;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+section {
+    padding: 2em;
+}
+
+footer {
+    width: 100%;
+    padding: 5vh;
+    height: 10vh;
+    color: #fff;
+    background-color: #e70;
+    box-shadow: 0 -5px 10px #ccc;
+    text-align: center;
+}

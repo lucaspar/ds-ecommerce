@@ -28,8 +28,9 @@ class Supplier {
         System.out.println("\t\t============\n");
 
         String managerIP = null;
-        if (args.length > 1) {
+        if (args.length > 0) {
             managerIP = args[0];
+            System.out.println(managerIP);
         }
 
         sqs         = connect2Amazon();
@@ -39,6 +40,7 @@ class Supplier {
         try {
             work();
         } catch (RemoteException e) {
+            e.printStackTrace();
             System.out.println("\tERROR: Failed to communicate with Manager");
         } catch (InterruptedException e) {
             e.printStackTrace();
