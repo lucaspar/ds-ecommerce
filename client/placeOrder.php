@@ -32,7 +32,8 @@ $client = new SoapClient($wsdl_url, array('trace' => true, 'exceptions' => false
 logme($client->__getTypes());
 logme($client->__getFunctions());
 
-$xml_array['arg0'] = htmlspecialchars(strtoupper($_POST['prodID']));
+echo htmlspecialchars(strtolower($_POST['prodID']));
+$xml_array['arg0'] = htmlspecialchars(strtolower($_POST['prodID']));
 $xml_array['arg1'] = htmlspecialchars($_POST['quantity']);
 
 $response = $client->placeOrder($xml_array);

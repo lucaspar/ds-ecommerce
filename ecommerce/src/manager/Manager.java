@@ -12,6 +12,7 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
     private static Space inventory_ts;
     private static Space processed_ts;
     private static TupleSpaceManager tm;
+    private static final String ticket = "ticket";
 
     public Manager() throws RemoteException {}
 
@@ -19,7 +20,7 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
     @Override
     public void addSupplies(String prodId, int quantity) throws RemoteException {
 
-        // TODO: add access control with ticket
+        inventory_ts.get(new SimpleTuple(ticket));                                      // get ticket from inventory_ts
 
         SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple(prodId, "*"));
 
@@ -32,6 +33,8 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
             inventory_ts.put(new SimpleTuple(prodId, qTotal + quantity));
         }
 
+        inventory_ts.put(new SimpleTuple(ticket));                                  // return ticket to inventory_ts
+
         System.out.println(Integer.toString(quantity) + " x " + prodId + " added to inventory.");
 
     }
@@ -42,10 +45,11 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
     @Override
     public boolean placeOrder(String orderId, String prodId, int quantity) throws RemoteException {
 
-        // TODO: add access control with ticket
+        inventory_ts.get(new SimpleTuple(ticket));                                      // get ticket from inventory_ts
 
         SimpleTuple result = (SimpleTuple) inventory_ts.readIfExists(new SimpleTuple(prodId, "*"));
         if(result == null) {
+            inventory_ts.put(new SimpleTuple(ticket));                                  // return ticket to inventory_ts
             return false;
         }
 
@@ -55,13 +59,20 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
         if (qTotal >= quantity) {                   // items available, place order
 
             inventory_ts.put(new SimpleTuple(prodId, qTotal-quantity));
-            processed_ts.put(new SimpleTuple(orderId, prodId, quantity));
+            processed_ts.get(new SimpleTuple(ticket));                                  // get ticket from processed_ts
+
+            processed_ts.put(new SimpleTuple(orderId, prodId, quantity));               // processed_ts critical section
+            processed_ts.put(new SimpleTuple(ticket));                                  // return ticket to processed_ts
+
+            inventory_ts.put(new SimpleTuple(ticket));                                  // return ticket to inventory_ts
 
             System.out.println("Order " + orderId + " was placed and processed.");
 
             return true;
 
         }
+
+        inventory_ts.put(new SimpleTuple(ticket));                                      // return ticket to inventory_ts
 
         System.out.println("Order " + orderId + " could not be processed.");
 
@@ -90,8 +101,12 @@ public class Manager extends UnicastRemoteObject implements ManagerInterface {
         if (inventory_ts == null)   { inventory_ts = tm.getSpace("Inventory"); }
         if (processed_ts == null)   { processed_ts = tm.getSpace("Processed"); }
 
-        inventory_ts.put(new SimpleTuple("prod1", 4));
-        processed_ts.put(new SimpleTuple("ord22", "prod1", 2));
+        //inventory_ts.put(new SimpleTuple("prod1", 4));
+        //processed_ts.put(new SimpleTuple("ord22", "prod1", 2));
+
+        // create single access tickets
+        inventory_ts.put(new SimpleTuple(ticket));
+        processed_ts.put(new SimpleTuple(ticket));
 
     }
 

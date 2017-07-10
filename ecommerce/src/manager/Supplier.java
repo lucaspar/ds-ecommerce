@@ -30,7 +30,6 @@ class Supplier {
         String managerIP = null;
         if (args.length > 0) {
             managerIP = args[0];
-            System.out.println(managerIP);
         }
 
         sqs         = connect2Amazon();
@@ -49,8 +48,6 @@ class Supplier {
     }
 
     private static void work() throws RemoteException, InterruptedException {
-
-        // TODO: add supplies based on pending queue
 
         Random rdm = new Random();
         String orderID, productID;
@@ -78,10 +75,13 @@ class Supplier {
                 }
 
                 int supply = (int) ((Math.random()*10) + quantity);
-                System.out.println(productID + ", " + String.valueOf(supply));
+
+                System.out.println("\tSupplying " + String.valueOf(supply) + " x " + productID);
 
                 warehouse.addSupplies(productID, supply);               // add supplies to warehouse
                 warehouse.placeOrder(orderID, productID, quantity);     // process pending order
+
+                System.out.println("\tSupplied " + String.valueOf(supply) + " x " + productID);
 
                 Thread.sleep(10000);
 

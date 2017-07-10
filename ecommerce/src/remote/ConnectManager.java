@@ -6,8 +6,6 @@ import java.rmi.Naming;
 
 public class ConnectManager {
 
-    private static final String managerAddress = "rmi://localhost/Manager";
-
     public static ManagerInterface connect2Manager(String managerIP) {
 
         int port = 1099;

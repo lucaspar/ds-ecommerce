@@ -5,7 +5,6 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
-import com.amazonaws.services.sqs.model.SendMessageResult;
 import manager.ManagerInterface;
 
 import javax.jws.WebMethod;
@@ -19,11 +18,8 @@ import java.rmi.RemoteException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
-import static remote.AmazonSQS.clientException;
-import static remote.AmazonSQS.connect2Amazon;
-import static remote.AmazonSQS.serviceException;
+import static remote.AmazonSQS.*;
 import static remote.ConnectManager.connect2Manager;
 
 
